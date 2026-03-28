@@ -8,7 +8,7 @@ A modern Kanban board application with drag-and-drop support, built with NestJS 
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Next.js 15 (App Router) + React 19 + Tailwind CSS 4 |
+| Frontend | Next.js 15 (App Router) + React 19 + Tailwind CSS 4 + shadcn/ui |
 | Backend | NestJS 11 + TypeScript |
 | Database | PostgreSQL 16 + Prisma ORM |
 | Auth | Passport.js + JWT |
@@ -21,7 +21,7 @@ A modern Kanban board application with drag-and-drop support, built with NestJS 
 - **Boards** — Create, rename, delete boards; each user sees only their own
 - **Lists** — Add, rename, delete lists within a board; drag to reorder
 - **Cards** — Create, edit (title + description), delete cards; drag within or across lists
-- **Responsive UI** — Tailwind CSS styling, works across screen sizes
+- **Responsive UI** — Tailwind CSS + shadcn/ui component library, works across screen sizes
 
 ## Project Structure
 
@@ -137,3 +137,16 @@ User  1──*  Board  1──*  List  1──*  Card
 - **Card**: id, title, content?, position, listId (unique: listId + position)
 
 Cascade deletes propagate from Board → List → Card.
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Docker Guide](./docs/docker-guide.md) | Line-by-line Docker and Docker Compose configuration walkthrough |
+| [PostgreSQL Guide](./docs/postgresql-guide.md) | PostgreSQL + Prisma ORM usage guide |
+| [Card Drag Call Stack](./docs/card-drag-call-stack.md) | Full-stack call chain analysis for card drag-and-drop |
+| [shadcn/ui Guide](./docs/shadcn-guide.md) | shadcn/ui component library setup and usage |
+
+## License
+
+[MIT](./LICENSE)

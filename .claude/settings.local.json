@@ -21,7 +21,8 @@
       "Bash(ls -la /Users/lipeixuan/code/002_AiAgent/fullstack-kanban/backend/generated/prisma/*.d.ts)",
       "Bash(grep -E \"\\\\.\\(ts|d\\\\.ts|js\\)$\")",
       "Bash(grep -E \"\\\\.js$\")",
-      "Skill(shadcn)"
+      "Skill(shadcn)",
+      "Bash(~/.claude-code-docs/claude-docs-helper.sh \"分析总结当前项目如何利用 react 与next.js, 需要默认读者没有相关经验. 包括工程方案和关键细节, 将基础和指令解释融入其中. 目的是让读者可以对照代码理解实现思路. 最终输出至docs目录下.\")"
     ]
   }
 }

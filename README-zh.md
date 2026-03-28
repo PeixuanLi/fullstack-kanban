@@ -8,7 +8,7 @@
 
 | 层级 | 技术 |
 |------|------|
-| 前端 | Next.js 15 (App Router) + React 19 + Tailwind CSS 4 |
+| 前端 | Next.js 15 (App Router) + React 19 + Tailwind CSS 4 + shadcn/ui |
 | 后端 | NestJS 11 + TypeScript |
 | 数据库 | PostgreSQL 16 + Prisma ORM |
 | 认证 | Passport.js + JWT |
@@ -21,7 +21,7 @@
 - **看板管理** — 创建、重命名、删除看板；用户只能查看自己的看板
 - **列表管理** — 在看板中添加、重命名、删除列表；支持拖拽排序
 - **卡片管理** — 创建、编辑（标题 + 描述）、删除卡片；支持列表内和跨列表拖拽
-- **响应式界面** — Tailwind CSS 样式，适配多种屏幕尺寸
+- **响应式界面** — Tailwind CSS + shadcn/ui 组件库，适配多种屏幕尺寸
 
 ## 项目结构
 
@@ -137,3 +137,16 @@ User  1──*  Board  1──*  List  1──*  Card
 - **Card（卡片）**：id, title, content?, position, listId（唯一约束：listId + position）
 
 删除时级联：Board → List → Card。
+
+## 文档
+
+| 文档 | 说明 |
+|------|------|
+| [Docker 工程方案详解](./docs/docker-guide.md) | Docker 和 Docker Compose 的逐行配置解析 |
+| [PostgreSQL 工程方案详解](./docs/postgresql-guide.md) | PostgreSQL + Prisma ORM 的使用详解 |
+| [卡片拖动调用栈分析](./docs/card-drag-call-stack.md) | 卡片拖拽功能的完整前后端调用链分析 |
+| [shadcn/ui 使用说明](./docs/shadcn-guide.md) | shadcn/ui 组件库的配置和使用方法 |
+
+## 开源协议
+
+[MIT](./LICENSE)

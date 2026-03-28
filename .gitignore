@@ -35,3 +35,6 @@ npm-debug.log*
 postgres-data/
 
 docs/.obsidian/
+
+# BMad
+_bmad/
