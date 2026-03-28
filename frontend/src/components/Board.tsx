@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, type Dispatch, type SetStateAction } from 'react';
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd';
-import type { Board as BoardType, List as ListType, Card as CardType } from '@/lib/types';
+import type { Board as BoardType, Card as CardType } from '@/lib/types';
 import { api } from '@/lib/api';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ListComponent from './List';
@@ -12,9 +12,10 @@ import CardEditModal from './CardEditModal';
 interface BoardProps {
   board: BoardType;
   onUpdate: () => void;
+  onBoardChange: Dispatch<SetStateAction<BoardType | null>>;
 }
 
-export default function BoardComponent({ board, onUpdate }: BoardProps) {
+export default function BoardComponent({ board, onUpdate, onBoardChange }: BoardProps) {
   const [editingCard, setEditingCard] = useState<CardType | null>(null);
 
   const sortedLists = board.lists
@@ -36,40 +37,50 @@ export default function BoardComponent({ board, onUpdate }: BoardProps) {
       const destListId = Number(destination.droppableId.replace('list-', ''));
       const cardId = Number(draggableId.replace('card-', ''));
 
+      // Optimistic update — immediately reflect the move in local state
+      onBoardChange((prev) => {
+        if (!prev) return prev;
+        const newLists = prev.lists.map((list) => {
+          if (sourceListId === destListId && list.id === sourceListId) {
+            const sorted = list.cards.slice().sort((a, b) => a.position - b.position);
+            const [moved] = sorted.splice(source.index, 1);
+            sorted.splice(destination.index, 0, moved);
+            return { ...list, cards: sorted.map((c, i) => ({ ...c, position: i })) };
+          }
+          if (list.id === sourceListId) {
+            return {
+              ...list,
+              cards: list.cards
+                .filter((c) => c.id !== cardId)
+                .sort((a, b) => a.position - b.position)
+                .map((c, i) => ({ ...c, position: i })),
+            };
+          }
+          if (list.id === destListId) {
+            const sourceList = prev.lists.find((l) => l.id === sourceListId);
+            const movedCard = sourceList?.cards.find((c) => c.id === cardId);
+            if (!movedCard) return list;
+            const sorted = list.cards.slice().sort((a, b) => a.position - b.position);
+            sorted.splice(destination.index, 0, { ...movedCard, listId: destListId });
+            return { ...list, cards: sorted.map((c, i) => ({ ...c, position: i })) };
+          }
+          return list;
+        });
+        return { ...prev, lists: newLists };
+      });
+
+      // Persist to server in background
       try {
-        if (sourceListId !== destListId) {
-          // Cross-list move
-          await api.put(`/cards/${cardId}/move`, {
-            listId: destListId,
-            position: destination.index,
-          });
-        } else {
-          // Same-list reorder — need to calculate new positions
-          const list = board.lists.find((l) => l.id === sourceListId);
-          if (!list) return;
-          const sorted = list.cards
-            .slice()
-            .sort((a, b) => a.position - b.position);
-          const [moved] = sorted.splice(source.index, 1);
-          sorted.splice(destination.index, 0, moved);
-          const reorderData = sorted.map((c, i) => ({
-            listId: c.listId,
-            position: i,
-          }));
-          // For same-list reorder, we use the lists reorder endpoint for simplicity
-          // Actually for cards in same list, we still use the move endpoint
-          await api.put(`/cards/${cardId}/move`, {
-            listId: sourceListId,
-            position: destination.index,
-          });
-        }
-        onUpdate();
+        await api.put(`/cards/${cardId}/move`, {
+          listId: destListId,
+          position: destination.index,
+        });
       } catch {
         // Revert on error
         onUpdate();
       }
     },
-    [board.lists, onUpdate]
+    [onBoardChange, onUpdate]
   );
 
   const handleAddList = useCallback(

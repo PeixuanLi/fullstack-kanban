@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Draggable } from '@hello-pangea/dnd';
 import { XIcon } from 'lucide-react';
 import type { Card as CardType } from '@/lib/types';
@@ -23,36 +24,6 @@ interface CardProps {
   onDelete: (id: number) => void;
 }
 
-// Cache for computed colors
-let colorCache: { bg: string; fg: string } | null = null;
-let isDarkCache: boolean | null = null;
-
-function getDragColors() {
-  const isDark = document.documentElement.classList.contains('dark');
-
-  // Return cached values if theme hasn't changed
-  if (colorCache && isDarkCache === isDark) {
-    return colorCache;
-  }
-
-  // Create a temporary element to get computed colors
-  const temp = document.createElement('div');
-  temp.className = 'bg-card text-card-foreground';
-  temp.style.position = 'absolute';
-  temp.style.visibility = 'hidden';
-  document.body.appendChild(temp);
-
-  const computed = window.getComputedStyle(temp);
-  colorCache = {
-    bg: computed.backgroundColor,
-    fg: computed.color,
-  };
-  isDarkCache = isDark;
-
-  document.body.removeChild(temp);
-  return colorCache;
-}
-
 export default function Card({ card, index, onEdit, onDelete }: CardProps) {
   const [alertOpen, setAlertOpen] = useState(false);
 
@@ -65,26 +36,16 @@ export default function Card({ card, index, onEdit, onDelete }: CardProps) {
     <>
       <Draggable draggableId={`card-${card.id}`} index={index}>
         {(provided, snapshot) => {
-          const dragStyle = snapshot.isDragging
-            ? {
-                backgroundColor: getDragColors().bg,
-                color: getDragColors().fg,
-              }
-            : {};
-
-          return (
+          const child = (
             <div
               ref={provided.innerRef}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
-              style={{
-                ...provided.draggableProps.style,
-                ...dragStyle,
-              }}
-              className={`group cursor-pointer rounded-xl border bg-card p-3 shadow-sm transition-all ${
+              style={provided.draggableProps.style}
+              className={`group cursor-pointer rounded-xl border bg-card text-card-foreground p-3 shadow-sm ${
                 snapshot.isDragging
-                  ? 'rotate-2 border-primary shadow-lg shadow-primary/20 scale-105'
-                  : 'border-border hover:border-primary/30 hover:shadow-md hover:shadow-primary/5'
+                  ? 'border-primary shadow-lg shadow-primary/20'
+                  : 'transition-colors transition-shadow border-border hover:border-primary/30 hover:shadow-md hover:shadow-primary/5'
               }`}
               onClick={() => onEdit(card)}
             >
@@ -111,6 +72,12 @@ export default function Card({ card, index, onEdit, onDelete }: CardProps) {
               )}
             </div>
           );
+
+          if (snapshot.isDragging) {
+            return createPortal(child, document.body);
+          }
+
+          return child;
         }}
       </Draggable>
 

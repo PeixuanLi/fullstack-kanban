@@ -144,7 +144,7 @@ export default function BoardDetailPage() {
 
       {/* Board */}
       <main className="flex-1">
-        {board && <BoardComponent board={board} onUpdate={fetchBoard} />}
+        {board && <BoardComponent board={board} onUpdate={fetchBoard} onBoardChange={setBoard} />}
       </main>
 
       {/* Delete confirmation dialog */}
