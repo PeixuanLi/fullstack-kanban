@@ -39,21 +39,21 @@ export default function Card({ card, index, onEdit, onDelete }: CardProps) {
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            className={`group cursor-pointer rounded-xl border bg-card p-3 shadow-sm transition-shadow ${
+            className={`group cursor-pointer rounded-xl border bg-card p-3 shadow-sm transition-all ${
               snapshot.isDragging
-                ? 'rotate-2 border-primary shadow-lg opacity-90'
-                : 'border-border hover:shadow-md'
+                ? 'rotate-2 border-primary shadow-lg shadow-primary/20 opacity-90 scale-105'
+                : 'border-border hover:border-primary/30 hover:shadow-md hover:shadow-primary/5'
             }`}
             onClick={() => onEdit(card)}
           >
             <div className="flex items-start justify-between gap-2">
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium group-hover:text-primary transition-colors">
                 {card.title}
               </span>
               <Button
                 variant="ghost"
                 size="icon-xs"
-                className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/10 hover:text-destructive"
                 onClick={(e) => {
                   e.stopPropagation();
                   setAlertOpen(true);

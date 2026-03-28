@@ -36,7 +36,7 @@ export default function AddListForm({ onAdd }: AddListFormProps) {
     return (
       <Button
         variant="secondary"
-        className="h-fit shrink-0"
+        className="h-fit shrink-0 hover:bg-primary/10 hover:text-primary transition-colors"
         onClick={() => setShow(true)}
       >
         <PlusIcon data-icon="inline-start" />
@@ -46,7 +46,7 @@ export default function AddListForm({ onAdd }: AddListFormProps) {
   }
 
   return (
-    <Card className="h-fit shrink-0 w-[280px] bg-muted">
+    <Card className="h-fit shrink-0 w-[280px] bg-muted/50 backdrop-blur supports-[backdrop-filter]:bg-muted/50 border-primary/20 border-dashed">
       <CardContent className="p-3">
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <Input

@@ -65,8 +65,8 @@ export default function List({
 
   return (
     <>
-      <Card className="h-fit w-[280px] shrink-0 bg-muted">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3">
+      <Card className="h-fit w-[280px] shrink-0 bg-muted/50 backdrop-blur supports-[backdrop-filter]:bg-muted/50 border-primary/10">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 border-b border-primary/5">
           {editing ? (
             <form onSubmit={handleTitleSubmit} className="flex-1">
               <Input
@@ -80,7 +80,7 @@ export default function List({
           ) : (
             <CardTitle
               onClick={() => setEditing(true)}
-              className="cursor-pointer text-sm hover:bg-muted-foreground/10 rounded px-2 py-1"
+              className="cursor-pointer text-sm hover:text-primary hover:bg-primary/5 rounded px-2 py-1 transition-colors"
             >
               {list.title}
             </CardTitle>
@@ -88,6 +88,7 @@ export default function List({
           <Button
             variant="ghost"
             size="icon-xs"
+            className="hover:bg-destructive/10 hover:text-destructive transition-colors"
             onClick={() => setAlertOpen(true)}
           >
             <XIcon data-icon="only" />

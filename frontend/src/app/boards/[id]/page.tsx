@@ -24,6 +24,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import BoardComponent from '@/components/Board';
+import ThemeToggle from '@/components/theme-toggle';
 
 export default function BoardDetailPage() {
   const { user, isLoading: authLoading } = useAuth();
@@ -96,7 +97,7 @@ export default function BoardDetailPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
-      <header className="flex items-center justify-between border-b px-6 py-3">
+      <header className="flex items-center justify-between border-b px-6 py-3 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => router.push('/boards')}>
             <ArrowLeftIcon data-icon="only" />
@@ -115,20 +116,23 @@ export default function BoardDetailPage() {
           ) : (
             <h1
               onClick={() => board && setEditingTitle(true)}
-              className="cursor-pointer text-lg font-bold hover:text-primary"
+              className="cursor-pointer text-lg font-bold hover:text-primary transition-colors"
             >
               {board?.title || 'Board'}
             </h1>
           )}
         </div>
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={() => setAlertOpen(true)}
-        >
-          <TrashIcon data-icon="inline-start" />
-          Delete Board
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => setAlertOpen(true)}
+          >
+            <TrashIcon data-icon="inline-start" />
+            Delete Board
+          </Button>
+        </div>
       </header>
 
       {/* Error */}

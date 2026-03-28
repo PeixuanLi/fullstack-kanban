@@ -22,6 +22,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import ThemeToggle from '@/components/theme-toggle';
 
 export default function HomePage() {
   const { user, isLoading, login, register } = useAuth();
@@ -67,8 +68,11 @@ export default function HomePage() {
   if (user) return null;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <Card className="w-full max-w-sm">
+    <div className="flex min-h-screen items-center justify-center bg-background relative">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+      <Card className="w-full max-w-sm border-primary/10 shadow-lg shadow-primary/5">
         <CardHeader>
           <CardTitle className="text-center text-2xl">Kanban Board</CardTitle>
           <CardDescription className="text-center">

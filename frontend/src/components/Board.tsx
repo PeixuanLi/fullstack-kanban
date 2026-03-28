@@ -124,7 +124,7 @@ export default function BoardComponent({ board, onUpdate }: BoardProps) {
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
-        <ScrollArea className="p-6">
+        <ScrollArea className="p-6 bg-gradient-to-br from-background via-background to-primary/5">
           <div className="flex gap-4">
             {sortedLists.map((list) => (
               <ListComponent

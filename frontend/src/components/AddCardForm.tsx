@@ -33,7 +33,7 @@ export default function AddCardForm({ listId, onAdd }: AddCardFormProps) {
     return (
       <Button
         variant="ghost"
-        className="w-full justify-start text-muted-foreground"
+        className="w-full justify-start text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
         onClick={() => setShow(true)}
       >
         <PlusIcon data-icon="inline-start" />

@@ -32,6 +32,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import ThemeToggle from '@/components/theme-toggle';
 
 interface Board {
   id: number;
@@ -108,10 +109,11 @@ export default function BoardsPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4">
-        <h1 className="text-xl font-bold">My Boards</h1>
-        <div className="flex items-center gap-4">
+      <header className="flex items-center justify-between px-6 py-4 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
+        <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">My Boards</h1>
+        <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground">{user?.username}</span>
+          <ThemeToggle />
           <Button variant="ghost" size="sm" onClick={logout}>
             <LogOutIcon data-icon="inline-start" />
             Logout
@@ -121,7 +123,7 @@ export default function BoardsPage() {
 
       <Separator />
 
-      <main className="p-6">
+      <main className="p-6 bg-gradient-to-br from-background via-background to-primary/5 min-h-[calc(100vh-65px)]">
         {error && (
           <Alert variant="destructive" className="mb-4">
             <AlertDescription>{error}</AlertDescription>
@@ -182,7 +184,7 @@ export default function BoardsPage() {
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {boards.map((board) => (
-              <Card key={board.id} className="group transition-shadow hover:shadow-lg">
+              <Card key={board.id} className="group transition-all hover:shadow-lg hover:border-primary/50">
                 <CardHeader>
                   <CardTitle className="text-lg">{board.title}</CardTitle>
                   <CardDescription>
@@ -192,7 +194,7 @@ export default function BoardsPage() {
                 <CardFooter className="justify-between">
                   <Button
                     variant="ghost"
-                    className="flex-1 justify-start"
+                    className="flex-1 justify-start hover:bg-primary/10 hover:text-primary"
                     onClick={() => router.push(`/boards/${board.id}`)}
                   >
                     Open
@@ -200,6 +202,7 @@ export default function BoardsPage() {
                   <Button
                     variant="ghost"
                     size="icon"
+                    className="hover:bg-destructive/10 hover:text-destructive"
                     onClick={() => setDeleteBoardId(board.id)}
                   >
                     <TrashIcon data-icon="only" />
