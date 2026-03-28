@@ -1,6 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { PlusIcon } from 'lucide-react';
+import type { Card as CardType } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface AddCardFormProps {
   listId: number;
@@ -27,42 +31,40 @@ export default function AddCardForm({ listId, onAdd }: AddCardFormProps) {
 
   if (!show) {
     return (
-      <button
+      <Button
+        variant="ghost"
+        className="w-full justify-start text-muted-foreground"
         onClick={() => setShow(true)}
-        className="w-full rounded-lg py-2 text-left text-sm text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 transition-colors"
       >
-        + Add card
-      </button>
+        <PlusIcon data-icon="inline-start" />
+        Add card
+      </Button>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2">
-      <input
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+      <Input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Card title"
         autoFocus
-        className="w-full rounded border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
       />
       <div className="flex gap-2">
-        <button
-          type="submit"
-          disabled={submitting}
-          className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
-        >
+        <Button type="submit" disabled={submitting} size="sm">
           Add
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => {
             setShow(false);
             setTitle('');
           }}
-          className="rounded px-3 py-1 text-sm text-zinc-500 hover:bg-zinc-100"
         >
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   );

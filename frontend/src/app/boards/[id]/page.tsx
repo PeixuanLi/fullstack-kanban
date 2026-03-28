@@ -2,9 +2,27 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { ArrowLeftIcon, TrashIcon } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { api } from '@/lib/api';
 import type { Board as BoardType } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import {
+  Alert,
+  AlertDescription,
+} from '@/components/ui/alert';
+import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import BoardComponent from '@/components/Board';
 
 export default function BoardDetailPage() {
@@ -18,6 +36,7 @@ export default function BoardDetailPage() {
   const [error, setError] = useState('');
   const [editingTitle, setEditingTitle] = useState(false);
   const [title, setTitle] = useState('');
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const fetchBoard = useCallback(async () => {
     try {
@@ -55,9 +74,9 @@ export default function BoardDetailPage() {
 
   async function handleDeleteBoard() {
     if (!board) return;
-    if (!confirm(`Delete board "${board.title}"? This cannot be undone.`)) return;
     try {
       await api.delete(`/boards/${board.id}`);
+      setAlertOpen(false);
       router.push('/boards');
     } catch {
       setError('Failed to delete board');
@@ -66,8 +85,8 @@ export default function BoardDetailPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-900">
-        <p className="text-zinc-400">Loading...</p>
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground">Loading...</p>
       </div>
     );
   }
@@ -75,55 +94,72 @@ export default function BoardDetailPage() {
   if (!user) return null;
 
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-700">
+    <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
-      <header className="flex items-center justify-between bg-zinc-800 px-6 py-3">
+      <header className="flex items-center justify-between border-b px-6 py-3">
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => router.push('/boards')}
-            className="text-zinc-400 hover:text-white transition-colors"
-          >
-            &larr; Boards
-          </button>
-          <span className="text-zinc-600">|</span>
+          <Button variant="ghost" size="icon" onClick={() => router.push('/boards')}>
+            <ArrowLeftIcon data-icon="only" />
+          </Button>
+          <Separator orientation="vertical" className="h-6" />
           {editingTitle && board ? (
             <form onSubmit={handleTitleSave}>
-              <input
+              <Input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 onBlur={handleTitleSave}
+                className="h-7 text-lg font-bold"
                 autoFocus
-                className="rounded border border-blue-400 bg-zinc-700 px-2 py-1 text-lg font-bold text-white focus:outline-none"
               />
             </form>
           ) : (
             <h1
               onClick={() => board && setEditingTitle(true)}
-              className="cursor-pointer text-lg font-bold text-white hover:text-blue-300 transition-colors"
+              className="cursor-pointer text-lg font-bold hover:text-primary"
             >
               {board?.title || 'Board'}
             </h1>
           )}
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleDeleteBoard}
-            className="rounded px-3 py-1 text-sm text-red-400 hover:bg-zinc-700"
-          >
-            Delete Board
-          </button>
-        </div>
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={() => setAlertOpen(true)}
+        >
+          <TrashIcon data-icon="inline-start" />
+          Delete Board
+        </Button>
       </header>
 
       {/* Error */}
       {error && (
-        <p className="mx-6 mt-4 rounded bg-red-900/50 px-4 py-2 text-red-200">
-          {error}
-        </p>
+        <Alert variant="destructive" className="mx-6 mt-4">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
       {/* Board */}
-      {board && <BoardComponent board={board} onUpdate={fetchBoard} />}
+      <main className="flex-1">
+        {board && <BoardComponent board={board} onUpdate={fetchBoard} />}
+      </main>
+
+      {/* Delete confirmation dialog */}
+      <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
+        <AlertDialogContent size="sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Board</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{board?.title}"? This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteBoard}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd';
 import type { Board as BoardType, List as ListType, Card as CardType } from '@/lib/types';
 import { api } from '@/lib/api';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import ListComponent from './List';
 import AddListForm from './AddListForm';
 import CardEditModal from './CardEditModal';
@@ -81,7 +82,6 @@ export default function BoardComponent({ board, onUpdate }: BoardProps) {
 
   const handleDeleteList = useCallback(
     async (id: number, title: string) => {
-      if (!confirm(`Delete list "${title}" and all its cards?`)) return;
       await api.delete(`/lists/${id}`);
       onUpdate();
     },
@@ -124,20 +124,22 @@ export default function BoardComponent({ board, onUpdate }: BoardProps) {
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex gap-4 overflow-x-auto p-6">
-          {sortedLists.map((list) => (
-            <ListComponent
-              key={list.id}
-              list={list}
-              onAddCard={handleAddCard}
-              onEditCard={setEditingCard}
-              onDeleteCard={handleDeleteCard}
-              onDeleteList={handleDeleteList}
-              onEditTitle={handleEditListTitle}
-            />
-          ))}
-          <AddListForm onAdd={handleAddList} />
-        </div>
+        <ScrollArea className="p-6">
+          <div className="flex gap-4">
+            {sortedLists.map((list) => (
+              <ListComponent
+                key={list.id}
+                list={list}
+                onAddCard={handleAddCard}
+                onEditCard={setEditingCard}
+                onDeleteCard={handleDeleteCard}
+                onDeleteList={handleDeleteList}
+                onEditTitle={handleEditListTitle}
+              />
+            ))}
+            <AddListForm onAdd={handleAddList} />
+          </div>
+        </ScrollArea>
       </DragDropContext>
 
       {editingCard && (

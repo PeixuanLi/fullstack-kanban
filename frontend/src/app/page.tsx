@@ -3,6 +3,25 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Alert,
+  AlertDescription,
+} from '@/components/ui/alert';
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
 
 export default function HomePage() {
   const { user, isLoading, login, register } = useAuth();
@@ -39,8 +58,8 @@ export default function HomePage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-900">
-        <p className="text-zinc-400">Loading...</p>
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground">Loading...</p>
       </div>
     );
   }
@@ -48,63 +67,67 @@ export default function HomePage() {
   if (user) return null;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-900">
-      <div className="w-full max-w-sm rounded-lg bg-zinc-800 p-8 shadow-xl">
-        <h1 className="mb-6 text-center text-2xl font-bold text-white">
-          Kanban Board
-        </h1>
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-center text-2xl">Kanban Board</CardTitle>
+          <CardDescription className="text-center">
+            {isRegister ? 'Create a new account' : 'Sign in to your account'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="username">Username</FieldLabel>
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  placeholder="Enter username"
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="Enter password"
+                />
+              </Field>
+            </FieldGroup>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="mb-1 block text-sm text-zinc-300">Username</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="w-full rounded border border-zinc-600 bg-zinc-700 px-3 py-2 text-white placeholder-zinc-400 focus:border-blue-500 focus:outline-none"
-              placeholder="Enter username"
-            />
-          </div>
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
 
-          <div>
-            <label className="mb-1 block text-sm text-zinc-300">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full rounded border border-zinc-600 bg-zinc-700 px-3 py-2 text-white placeholder-zinc-400 focus:border-blue-500 focus:outline-none"
-              placeholder="Enter password"
-            />
-          </div>
-
-          {error && (
-            <p className="text-sm text-red-400">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full rounded bg-blue-600 py-2 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-          >
-            {submitting ? 'Please wait...' : isRegister ? 'Register' : 'Login'}
-          </button>
-        </form>
-
-        <p className="mt-4 text-center text-sm text-zinc-400">
-          {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
-          <button
-            onClick={() => {
-              setIsRegister(!isRegister);
-              setError('');
-            }}
-            className="text-blue-400 hover:underline"
-          >
-            {isRegister ? 'Login' : 'Register'}
-          </button>
-        </p>
-      </div>
+            <Button type="submit" disabled={submitting} className="w-full">
+              {submitting ? 'Please wait...' : isRegister ? 'Register' : 'Login'}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="justify-center">
+          <p className="text-center text-sm text-muted-foreground">
+            {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
+            <Button
+              variant="link"
+              onClick={() => {
+                setIsRegister(!isRegister);
+                setError('');
+              }}
+            >
+              {isRegister ? 'Login' : 'Register'}
+            </Button>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

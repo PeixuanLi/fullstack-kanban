@@ -20,7 +20,8 @@
       "Bash(node:*)",
       "Bash(ls -la /Users/lipeixuan/code/002_AiAgent/fullstack-kanban/backend/generated/prisma/*.d.ts)",
       "Bash(grep -E \"\\\\.\\(ts|d\\\\.ts|js\\)$\")",
-      "Bash(grep -E \"\\\\.js$\")"
+      "Bash(grep -E \"\\\\.js$\")",
+      "Skill(shadcn)"
     ]
   }
 }

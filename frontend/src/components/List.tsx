@@ -2,7 +2,27 @@
 
 import { useState } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
+import { XIcon } from 'lucide-react';
 import type { List as ListType, Card as CardType } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import CardComponent from './Card';
 import AddCardForm from './AddCardForm';
 
@@ -25,6 +45,7 @@ export default function List({
 }: ListProps) {
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(list.title);
+  const [alertOpen, setAlertOpen] = useState(false);
 
   async function handleTitleSubmit(e?: React.FormEvent) {
     e?.preventDefault();
@@ -37,66 +58,87 @@ export default function List({
     setEditing(false);
   }
 
+  const handleDeleteList = () => {
+    setAlertOpen(false);
+    onDeleteList(list.id, list.title);
+  };
+
   return (
-    <div className="h-fit w-[280px] shrink-0 rounded-lg bg-zinc-200 p-3">
-      {/* List header */}
-      <div className="mb-2 flex items-center justify-between">
-        {editing ? (
-          <form onSubmit={handleTitleSubmit} className="flex-1">
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              onBlur={() => handleTitleSubmit()}
-              autoFocus
-              className="w-full rounded border border-blue-400 px-2 py-1 text-sm font-semibold focus:outline-none"
-            />
-          </form>
-        ) : (
-          <h3
-            onClick={() => setEditing(true)}
-            className="cursor-pointer px-2 py-1 text-sm font-semibold text-zinc-800 hover:bg-zinc-300 rounded"
+    <>
+      <Card className="h-fit w-[280px] shrink-0 bg-muted">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3">
+          {editing ? (
+            <form onSubmit={handleTitleSubmit} className="flex-1">
+              <Input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={() => handleTitleSubmit()}
+                className="h-7 text-sm font-semibold"
+                autoFocus
+              />
+            </form>
+          ) : (
+            <CardTitle
+              onClick={() => setEditing(true)}
+              className="cursor-pointer text-sm hover:bg-muted-foreground/10 rounded px-2 py-1"
+            >
+              {list.title}
+            </CardTitle>
+          )}
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => setAlertOpen(true)}
           >
-            {list.title}
-          </h3>
-        )}
-        <button
-          onClick={() => onDeleteList(list.id, list.title)}
-          className="ml-1 text-zinc-400 hover:text-red-500 text-lg leading-none"
-          title="Delete list"
-        >
-          &times;
-        </button>
-      </div>
+            <XIcon data-icon="only" />
+          </Button>
+        </CardHeader>
 
-      {/* Cards */}
-      <Droppable droppableId={`list-${list.id}`}>
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className="space-y-2 min-h-[8px]"
-          >
-            {list.cards
-              .slice()
-              .sort((a, b) => a.position - b.position)
-              .map((card, index) => (
-                <CardComponent
-                  key={card.id}
-                  card={card}
-                  index={index}
-                  onEdit={onEditCard}
-                  onDelete={onDeleteCard}
-                />
-              ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
+        <Droppable droppableId={`list-${list.id}`}>
+          {(provided) => (
+            <CardContent
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className="p-3 pt-0 flex flex-col gap-2 min-h-[8px]"
+            >
+              {list.cards
+                .slice()
+                .sort((a, b) => a.position - b.position)
+                .map((card, index) => (
+                  <CardComponent
+                    key={card.id}
+                    card={card}
+                    index={index}
+                    onEdit={onEditCard}
+                    onDelete={onDeleteCard}
+                  />
+                ))}
+              {provided.placeholder}
+            </CardContent>
+          )}
+        </Droppable>
 
-      {/* Add card */}
-      <div className="mt-2">
-        <AddCardForm listId={list.id} onAdd={onAddCard} />
-      </div>
-    </div>
+        <CardFooter className="p-3">
+          <AddCardForm listId={list.id} onAdd={onAddCard} />
+        </CardFooter>
+      </Card>
+
+      <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
+        <AlertDialogContent size="sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete List</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{list.title}" and all its cards? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteList}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

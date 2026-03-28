@@ -1,6 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { PlusIcon } from 'lucide-react';
+import type { List as ListType, Card as CardType } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 
 interface AddListFormProps {
   onAdd: (title: string) => Promise<void>;
@@ -26,45 +34,45 @@ export default function AddListForm({ onAdd }: AddListFormProps) {
 
   if (!show) {
     return (
-      <button
+      <Button
+        variant="secondary"
+        className="h-fit shrink-0"
         onClick={() => setShow(true)}
-        className="h-fit shrink-0 rounded-lg bg-zinc-700 px-4 py-3 text-sm text-zinc-300 hover:bg-zinc-600 transition-colors"
       >
-        + Add list
-      </button>
+        <PlusIcon data-icon="inline-start" />
+        Add list
+      </Button>
     );
   }
 
   return (
-    <div className="h-fit shrink-0 w-[280px] rounded-lg bg-zinc-200 p-3">
-      <form onSubmit={handleSubmit} className="space-y-2">
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="List title"
-          autoFocus
-          className="w-full rounded border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-        />
-        <div className="flex gap-2">
-          <button
-            type="submit"
-            disabled={submitting}
-            className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
-          >
-            Add
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setShow(false);
-              setTitle('');
-            }}
-            className="rounded px-3 py-1 text-sm text-zinc-500 hover:bg-zinc-300"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
+    <Card className="h-fit shrink-0 w-[280px] bg-muted">
+      <CardContent className="p-3">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="List title"
+            autoFocus
+          />
+          <div className="flex gap-2">
+            <Button type="submit" disabled={submitting} size="sm">
+              Add
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setShow(false);
+                setTitle('');
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
