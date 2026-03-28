@@ -3,7 +3,24 @@
     "allow": [
       "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npx:*)",
+      "Bash(printf 'No\\\\nNo\\\\n')",
+      "Bash(yes \"No\")",
+      "Bash(npm install:*)",
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)",
+      "Bash(git stash:*)",
+      "Bash(npm run:*)",
+      "Bash(docker compose:*)",
+      "Bash(PGPASSWORD=postgres psql -h localhost -U postgres -d kanban -c \"SELECT 1\" 2>&1)",
+      "Bash(docker exec:*)",
+      "Bash(docker port:*)",
+      "Bash(docker run:*)",
+      "Bash(node:*)",
+      "Bash(ls -la /Users/lipeixuan/code/002_AiAgent/fullstack-kanban/backend/generated/prisma/*.d.ts)",
+      "Bash(grep -E \"\\\\.\\(ts|d\\\\.ts|js\\)$\")",
+      "Bash(grep -E \"\\\\.js$\")"
     ]
   }
 }

@@ -26,12 +26,14 @@
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
+    "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^7.6.0",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
@@ -46,6 +48,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^22.10.7",
     "@types/passport-jwt": "^4.0.1",
+    "@types/pg": "^8.20.0",
     "@types/supertest": "^6.0.2",
     "dotenv": "^17.3.1",
     "eslint": "^9.18.0",
@@ -79,7 +82,7 @@
       "<rootDir>/../node_modules/(?!(generated)/)"
     ],
     "moduleNameMapper": {
-      "^../../generated/prisma/client$": "<rootDir>/__mocks__/prisma-client.ts"
+      "^@prisma/client$": "<rootDir>/__mocks__/prisma-client.ts"
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"
