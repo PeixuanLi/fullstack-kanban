@@ -145,6 +145,7 @@ User  1──*  Board  1──*  List  1──*  Card
 | [Docker 工程方案详解](./docs/docker-guide.md) | Docker 和 Docker Compose 的逐行配置解析 |
 | [PostgreSQL 工程方案详解](./docs/postgresql-guide.md) | PostgreSQL + Prisma ORM 的使用详解 |
 | [卡片拖动调用栈分析](./docs/card-drag-call-stack.md) | 卡片拖拽功能的完整前后端调用链分析 |
+| [NestJS 工程方案详解](./docs/nestjs-guide.md) | NestJS 后端架构、模块、认证及关键实现模式 |
 | [shadcn/ui 使用说明](./docs/shadcn-guide.md) | shadcn/ui 组件库的配置和使用方法 |
 
 ## 开源协议

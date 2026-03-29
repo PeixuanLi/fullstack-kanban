@@ -38,3 +38,6 @@ docs/.obsidian/
 
 # BMad
 _bmad/
+
+# Claude
+.claude/

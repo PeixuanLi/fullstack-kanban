@@ -145,6 +145,7 @@ Cascade deletes propagate from Board → List → Card.
 | [Docker Guide](./docs/docker-guide.md) | Line-by-line Docker and Docker Compose configuration walkthrough |
 | [PostgreSQL Guide](./docs/postgresql-guide.md) | PostgreSQL + Prisma ORM usage guide |
 | [Card Drag Call Stack](./docs/card-drag-call-stack.md) | Full-stack call chain analysis for card drag-and-drop |
+| [NestJS Guide](./docs/nestjs-guide.md) | NestJS backend architecture, modules, auth, and key implementation patterns |
 | [shadcn/ui Guide](./docs/shadcn-guide.md) | shadcn/ui component library setup and usage |
 
 ## License
