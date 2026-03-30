@@ -66,11 +66,18 @@ fullstack-kanban/
 │   │   └── prisma/          # PrismaService singleton
 │   └── prisma/
 │       └── schema.prisma    # Database models & relations
-├── frontend/                 # Next.js client app
+├── frontend/                 # Next.js client app (React 19)
 │   └── src/
 │       ├── app/             # Routes: login, board list, board detail
 │       ├── components/      # Board, List, Card, Modals, Forms, UI primitives
 │       └── lib/             # API client, auth context, TypeScript types
+├── frontend-nuxtjs/          # NuxtJS client app (Vue 3 + Nuxt UI)
+│   └── app/
+│       ├── pages/           # File-based routing
+│       ├── components/      # Vue components with Nuxt UI
+│       ├── composables/     # Reusable composition functions
+│       ├── plugins/         # Nuxt plugins (API client)
+│       └── middleware/      # Route middleware (auth guard)
 └── docker-compose.yml       # PostgreSQL + Backend + Frontend
 ```
 
@@ -224,6 +231,7 @@ Deep-dive documentation for each layer of the stack:
 | Document | Description |
 |----------|-------------|
 | [Next.js/React Guide](./docs/nextjs-guide.md) | App Router, React fundamentals, frontend architecture, and implementation patterns |
+| [NuxtJS/Nuxt UI Guide](./docs/nuxtjs-guide.md) | Nuxt 4 with Nuxt UI, file-based routing, composables, and Vue patterns |
 | [shadcn/ui Guide](./docs/shadcn-guide.md) | shadcn/ui component library setup and usage |
 | [NestJS Guide](./docs/nestjs-guide.md) | NestJS backend architecture, modules, auth, and key implementation patterns |
 | [PostgreSQL Guide](./docs/postgresql-guide.md) | PostgreSQL + Prisma ORM usage guide |

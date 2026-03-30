@@ -66,11 +66,18 @@ fullstack-kanban/
 │   │   └── prisma/          # PrismaService 单例
 │   └── prisma/
 │       └── schema.prisma    # 数据库模型与关系定义
-├── frontend/                 # Next.js 客户端应用
+├── frontend/                 # Next.js 客户端应用 (React 19)
 │   └── src/
 │       ├── app/             # 路由：登录、看板列表、看板详情
 │       ├── components/      # 组件：看板、列表、卡片、弹窗、表单、UI 基础组件
 │       └── lib/             # API 客户端、认证上下文、TypeScript 类型
+├── frontend-nuxtjs/          # NuxtJS 客户端应用 (Vue 3 + Nuxt UI)
+│   └── app/
+│       ├── pages/           # 文件系统路由
+│       ├── components/      # Vue 组件（使用 Nuxt UI）
+│       ├── composables/     # 可复用的组合式函数
+│       ├── plugins/         # Nuxt 插件（API 客户端）
+│       └── middleware/      # 路由中间件（认证守卫）
 └── docker-compose.yml       # PostgreSQL + 后端 + 前端
 ```
 
@@ -224,6 +231,7 @@ npm run dev
 | 文档 | 说明 |
 |------|------|
 | [Next.js/React 前端工程方案详解](./docs/nextjs-guide.md) | App Router、React 基础、前端架构及实现模式详解 |
+| [NuxtJS/Nuxt UI 工程方案详解](./docs/nuxtjs-guide.md) | Nuxt 4 + Nuxt UI、文件路由、组合式函数与 Vue 模式 |
 | [shadcn/ui 使用说明](./docs/shadcn-guide.md) | shadcn/ui 组件库的配置和使用方法 |
 | [NestJS 工程方案详解](./docs/nestjs-guide.md) | NestJS 后端架构、模块、认证及关键实现模式 |
 | [PostgreSQL 工程方案详解](./docs/postgresql-guide.md) | PostgreSQL + Prisma ORM 的使用详解 |
