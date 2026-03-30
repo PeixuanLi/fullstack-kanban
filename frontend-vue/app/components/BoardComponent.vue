@@ -16,8 +16,9 @@ const sortedLists = computed(() =>
 )
 
 async function handleCardDragEnd(evt: any) {
+  if (!evt) return
   const { item, from, to, newIndex } = evt
-  if (newIndex === undefined) return
+  if (newIndex === undefined || !item || !to) return
 
   const cardId = Number(item.dataset?.id || item.__draggable_context?.element?.id)
   const destListId = Number(to.closest('[data-list-id]')?.dataset.listId || to.dataset?.listId)
@@ -62,7 +63,7 @@ async function handleAddList(title: string) {
     method: 'POST',
     body: { title }
   })
-  props.onUpdate()
+  await props.onUpdate()
 }
 
 async function handleDeleteList(id: number) {
@@ -111,19 +112,17 @@ async function handleSaveCard(id: number, title: string, content: string | null)
           item-key="id"
           class="flex gap-4"
         >
-          <template #item="{ element: list }">
-            <div :data-list-id="list.id">
-              <KanbanList
-                :list="list"
-                @add-card="handleAddCard"
-                @edit-card="editingCard = $event"
-                @delete-card="handleDeleteCard"
-                @delete-list="handleDeleteList"
-                @edit-title="handleEditListTitle"
-                @card-moved="handleCardDragEnd"
-              />
-            </div>
-          </template>
+          <div v-for="list in sortedLists" :key="list.id" :data-list-id="list.id">
+            <KanbanList
+              :list="list"
+              @add-card="handleAddCard"
+              @edit-card="editingCard = $event"
+              @delete-card="handleDeleteCard"
+              @delete-list="handleDeleteList"
+              @edit-title="handleEditListTitle"
+              @card-moved="handleCardDragEnd"
+            />
+          </div>
         </VueDraggable>
       </ClientOnly>
 

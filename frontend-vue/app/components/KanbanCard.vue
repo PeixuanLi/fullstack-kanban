@@ -20,6 +20,7 @@ function handleDelete() {
 
 <template>
   <div
+    :data-id="card.id"
     class="group cursor-pointer rounded-xl border bg-elevated p-3 shadow-sm transition-colors hover:border-primary/30 hover:shadow-md"
     @click="emit('edit', card)"
   >
@@ -49,9 +50,11 @@ function handleDelete() {
         Delete Card
       </h3>
     </template>
-    <p class="text-muted">
-      Are you sure you want to delete "{{ card.title }}"? This action cannot be undone.
-    </p>
+    <template #body>
+      <p class="text-muted">
+        Are you sure you want to delete "{{ card.title }}"? This action cannot be undone.
+      </p>
+    </template>
     <template #footer>
       <UButton variant="ghost" @click="alertOpen = false">
         Cancel

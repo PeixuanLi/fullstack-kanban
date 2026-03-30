@@ -12,7 +12,7 @@ const emit = defineEmits<{
   deleteCard: [id: number]
   deleteList: [id: number]
   editTitle: [id: number, title: string]
-  cardMoved: []
+  cardMoved: [evt: any]
 }>()
 
 const editing = ref(false)
@@ -43,8 +43,8 @@ function handleDelete() {
   emit('deleteList', props.list.id)
 }
 
-function onDragEnd() {
-  emit('cardMoved')
+function onDragEnd(evt: any) {
+  emit('cardMoved', evt)
 }
 </script>
 
@@ -89,13 +89,13 @@ function onDragEnd() {
           class="flex flex-col gap-2"
           @end="onDragEnd"
         >
-          <template #item="{ element }">
-            <KanbanCard
-              :card="element"
-              @edit="emit('editCard', $event)"
-              @delete="emit('deleteCard', $event)"
-            />
-          </template>
+          <KanbanCard
+            v-for="card in sortedCards"
+            :key="card.id"
+            :card="card"
+            @edit="emit('editCard', $event)"
+            @delete="emit('deleteCard', $event)"
+          />
         </VueDraggable>
       </ClientOnly>
     </div>
@@ -103,7 +103,7 @@ function onDragEnd() {
     <template #footer>
       <AddCardForm
         :list-id="list.id"
-        @add="emit('addCard', $event.listId, $event.title)"
+        @add="(listId, title) => emit('addCard', listId, title)"
       />
     </template>
   </UCard>
@@ -114,9 +114,11 @@ function onDragEnd() {
         Delete List
       </h3>
     </template>
-    <p class="text-muted">
-      Are you sure you want to delete "{{ list.title }}" and all its cards? This action cannot be undone.
-    </p>
+    <template #body>
+      <p class="text-muted">
+        Are you sure you want to delete "{{ list.title }}" and all its cards? This action cannot be undone.
+      </p>
+    </template>
     <template #footer>
       <UButton variant="ghost" @click="alertOpen = false">
         Cancel
