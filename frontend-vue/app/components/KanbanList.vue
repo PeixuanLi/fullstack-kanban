@@ -12,16 +12,29 @@ const emit = defineEmits<{
   deleteCard: [id: number]
   deleteList: [id: number]
   editTitle: [id: number, title: string]
-  cardMoved: [evt: any]
+  cardMoved: [moveData: { cardId: number; sourceListId: number; destListId: number; newIndex: number }]
 }>()
 
 const editing = ref(false)
 const editTitle = ref(props.list.title)
 const alertOpen = ref(false)
 
-const sortedCards = computed(() =>
-  [...props.list.cards].sort((a, b) => a.position - b.position)
-)
+// Local state managed by vue-draggable-plus via v-model.
+// SortableJS modifies the DOM directly on drag; vue-draggable-plus
+// keeps localCards in sync.  When the parent refreshes from server
+// (props.list.cards changes), we force a full remount of the
+// VueDraggable instance via `draggableKey` so that SortableJS
+// re-initialises from scratch and the DOM matches the server state.
+const localCards = ref<Card[]>([])
+const draggableKey = ref(0)
+
+function syncFromProps() {
+  const sorted = [...props.list.cards].sort((a, b) => a.position - b.position)
+  localCards.value = sorted
+  draggableKey.value++
+}
+
+watch(() => props.list.cards, syncFromProps, { deep: true, immediate: true })
 
 function startEditing() {
   editTitle.value = props.list.title
@@ -44,7 +57,24 @@ function handleDelete() {
 }
 
 function onDragEnd(evt: any) {
-  emit('cardMoved', evt)
+  if (!evt) return
+  const { item, to, newIndex, oldIndex } = evt
+  if (newIndex === undefined || !item || !to) return
+
+  const cardId = Number(item.dataset?.id || item.__draggable_context?.element?.id)
+  const destListId = Number(to.closest('[data-list-id]')?.dataset.listId || to.dataset?.listId)
+
+  if (!cardId || !destListId) return
+
+  // Skip no-op: same list and same position
+  if (props.list.id === destListId && newIndex === oldIndex) return
+
+  emit('cardMoved', {
+    cardId,
+    sourceListId: props.list.id,
+    destListId,
+    newIndex,
+  })
 }
 </script>
 
@@ -83,14 +113,15 @@ function onDragEnd(evt: any) {
     <div class="flex flex-col gap-2 min-h-[8px] p-3 pt-0">
       <ClientOnly>
         <VueDraggable
-          :model-value="sortedCards"
+          :key="draggableKey"
+          v-model="localCards"
           group="cards"
           item-key="id"
           class="flex flex-col gap-2"
           @end="onDragEnd"
         >
           <KanbanCard
-            v-for="card in sortedCards"
+            v-for="card in localCards"
             :key="card.id"
             :card="card"
             @edit="emit('editCard', $event)"

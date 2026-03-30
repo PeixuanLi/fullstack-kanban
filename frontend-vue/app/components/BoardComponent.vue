@@ -15,45 +15,16 @@ const sortedLists = computed(() =>
   [...props.board.lists].sort((a, b) => a.position - b.position)
 )
 
-async function handleCardDragEnd(evt: any) {
-  if (!evt) return
-  const { item, from, to, newIndex } = evt
-  if (newIndex === undefined || !item || !to) return
-
-  const cardId = Number(item.dataset?.id || item.__draggable_context?.element?.id)
-  const destListId = Number(to.closest('[data-list-id]')?.dataset.listId || to.dataset?.listId)
-
-  if (!cardId || !destListId) return
-
-  // Optimistic update
-  const sourceListId = Number(from.closest('[data-list-id]')?.dataset.listId || from.dataset?.listId)
-  const movedCard = props.board.lists
-    .flatMap(l => l.cards)
-    .find(c => c.id === cardId)
-  if (!movedCard) return
-
-  props.onBoardChange({
-    ...props.board,
-    lists: props.board.lists.map(list => {
-      if (list.id === sourceListId && sourceListId !== destListId) {
-        return { ...list, cards: list.cards.filter(c => c.id !== cardId) }
-      }
-      if (list.id === destListId) {
-        const newCards = list.cards.filter(c => c.id !== cardId)
-        newCards.splice(newIndex, 0, { ...movedCard, listId: destListId })
-        return { ...list, cards: newCards }
-      }
-      return list
-    })
-  })
+async function handleCardDragEnd(moveData: { cardId: number; sourceListId: number; destListId: number; newIndex: number }) {
+  const { cardId, destListId, newIndex } = moveData
 
   try {
     await $api(`/cards/${cardId}/move`, {
       method: 'PUT',
-      body: { listId: destListId, position: newIndex }
+      body: { listId: destListId, position: newIndex },
     })
   }
-  catch {
+  finally {
     props.onUpdate()
   }
 }
